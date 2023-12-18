@@ -12,14 +12,12 @@ use SimpleSAML\Logger;
 class Metrics extends ProcessingFilter
 {
     private array $config;
-    private string $reserved;
     private string $userIdAttribute;
 
-    public function __construct(array $config, string $reserved)
+    public function __construct(array $config, $reserved)
     {
         parent::__construct($config, $reserved);
-        $this->config = Configuration::getConfig(DatabaseConnector::CONFIG_FILE_NAME);
-        $this->reserved = (array)$reserved;
+        $this->config = Configuration::getConfig();
     }
 
     public function process(array &$request): void

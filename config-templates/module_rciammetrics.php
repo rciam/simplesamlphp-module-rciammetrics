@@ -43,7 +43,7 @@ $config = [
     'userIdAttribute' => null,
 
     /*
-     * Which users should be blacklisted
+     * Which users should be excluded
      */
     'userIdExcludelist' => array(),
 
