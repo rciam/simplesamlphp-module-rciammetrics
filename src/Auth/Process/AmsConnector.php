@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleSAML\Module\proxystatistics\Auth\Process;
+namespace SimpleSAML\Module\rciammetrics\Auth\Process;
 
 use SimpleSAML\Configuration;
 use SimpleSAML\Database;
@@ -13,7 +13,6 @@ class AmsConnector
   private $idpName;
   private $spEntityId;
   private $spName;
-  private $detailedDays;
   private $userIdAttribute;
   private $conn = null;
   private $oidcIss;
@@ -37,11 +36,9 @@ class AmsConnector
   const IDP_NAME = 'idpName';
   const SP_ENTITY_ID = 'spEntityId';
   const SP_NAME = 'spName';
-  const DETAILED_DAYS = 'detailedDays';
   const USER_ID_ATTRIBUTE = 'userIdAttribute';
   const OIDC_ISS = 'oidcIssuer';
   const KEYCLOAK_SP = 'keycloakSp';
-  const TABLE_PREFIX = 'database.prefix';
   const  AMS_INJEST_ENDPOINT = '/ams/ingest';
 
   const AMS_BASE_URL="https://msg-devel.argo.grnet.gr/v1";
@@ -63,7 +60,6 @@ class AmsConnector
     $this->idpName = $conf->getString(self::IDP_NAME, '');
     $this->spEntityId = $conf->getString(self::SP_ENTITY_ID, '');
     $this->spName = $conf->getString(self::SP_NAME, '');
-    $this->detailedDays = $conf->getInteger(self::DETAILED_DAYS, 0);
     $this->userIdAttribute = $conf->getString(self::USER_ID_ATTRIBUTE, null);
     $this->oidcIss = $conf->getString(self::OIDC_ISS, null);
     $this->keycloakSp = $conf->getString(self::KEYCLOAK_SP, null);
@@ -92,11 +88,6 @@ class AmsConnector
   public function getSpName()
   {
     return $this->spName;
-  }
-
-  public function getDetailedDays()
-  {
-    return $this->detailedDays;
   }
 
   public function getUserIdAttribute()

@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleSAML\Module\proxystatistics\Auth\Process;
+namespace SimpleSAML\Module\rciammetrics\Auth\Process;
 
 use SimpleSAML\Error\Exception;
 use SimpleSAML\Logger;
@@ -8,9 +8,6 @@ use SimpleSAML\Metadata\MetaDataStorageHandler;
 use SimpleSAML\Module\proxystatistics\Utils;
 use PDO;
 
-/**
- * @author Pavel Vyskočil <vyskocilpavel@muni.cz>
- */
 class AmsCommand
 {
     private $amsConnector;

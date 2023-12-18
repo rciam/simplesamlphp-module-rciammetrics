@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleSAML\Module\proxystatistics\Auth\Process;
+namespace SimpleSAML\Module\rciammetrics\Auth\Process;
 
 use DateTime;
 use DateTimeZone;
@@ -9,11 +9,7 @@ use SimpleSAML\Configuration;
 use SimpleSAML\Error\Exception;
 use SimpleSAML\Logger;
 
-/**
- *
- * @author Pavel Vyskočil <vyskocilpavel@muni.cz>
- */
-class Statistics extends ProcessingFilter
+class Metrics extends ProcessingFilter
 {
     private array $config;
     private string $reserved;
@@ -46,8 +42,8 @@ class Statistics extends ProcessingFilter
         // Check if user is in blacklist
         if (
             !empty($this->userIdAttribute)
-            && !empty($this->config->getArray('userIdBlacklist'))
-            && !empty(array_intersect($this->userIdAttribute, $this->config->getArray('userIdBlacklist')))
+            && !empty($this->config->getArray('userIdExcludelist'))
+            && !empty(array_intersect($this->userIdAttribute, $this->config->getArray('userIdExcludelist')))
         ) {
             Logger::notice("[proxystatistics:proccess] Skipping blacklisted user with id " . var_export($this->userIdAttribute, true));
             return;

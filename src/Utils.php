@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleSAML\Module\proxystatistics;
+namespace SimpleSAML\Module\rciammetrics;
 
 /**
  * Proxy Statistics utilities.

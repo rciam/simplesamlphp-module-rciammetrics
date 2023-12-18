@@ -1,9 +1,8 @@
 <?php
 /**
- * This is example configuration of SimpleSAMLphp Perun interface and additional features.
- * Copy this file to default config directory and edit the properties.
+ * This is an example configuration file for the Metrics module for the RCIAM Metrics framework.
+ * Copy this file to the SimpleSAMLphp config directory and edit the properties according to your specific deployment environment.
  *
- * @author Pavel Vyskočil <vyskocilpavel@muni.cz>
  */
 
 $config = [
@@ -37,71 +36,6 @@ $config = [
      */
     'spName' => '',
 
-    /*
-     * Fill config for SimpleSAML\Database.
-     * If not set, the global config is used.
-     * @see SimpleSAML\Database
-     */
-    'store' => [
-        'database.dsn' => 'mysql:host=localhost;port=3306;dbname=STATS;charset=utf8',
-        'database.username' => 'stats',
-        'database.password' => 'stats',
-
-        /*
-         * (Optional) Table prefix
-         */
-        'database.prefix' => '',
-
-        /**
-         * Configuration for SSL
-         * If you want to use SSL you must filled this value and uncomment block of code
-         */
-        /*
-        'database.driver_options' => [
-            // Path for the ssl key file
-            PDO::MYSQL_ATTR_SSL_KEY => '',
-            // Path for the ssl cert file
-            PDO::MYSQL_ATTR_SSL_CERT => '',
-            // Path for the ssl ca file
-            PDO::MYSQL_ATTR_SSL_CA => '',
-            // Path for the ssl ca dir
-            PDO::MYSQL_ATTR_SSL_CAPATH => '',
-        ],
-        */
-
-        /*
-         * True or false if you would like a persistent database connection
-         */
-        'database.persistent' => false,
-
-        /*
-         * Database slave configuration is optional as well. If you are only
-         * running a single database server, leave this blank. If you have
-         * a master/slave configuration, you can define as many slave servers
-         * as you want here. Slaves will be picked at random to be queried from.
-         *
-         * Configuration options in the slave array are exactly the same as the
-         * options for the master (shown above) with the exception of the table
-         * prefix and driver options.
-         */
-        'database.slaves' => [
-            /*
-            [
-                'dsn' => 'mysql:host=myslave;dbname=saml',
-                'username' => 'simplesamlphp',
-                'password' => 'secret',
-                'persistent' => false,
-            ],
-            */
-        ],
-    ],
-
-    /*
-     * For how many days should detailed statistics (per user) be kept.
-     * @default 0
-     */
-    'detailedDays' => 0,
-
     /**
      * Which attribute should be used as user ID.
      * @default uid
@@ -111,34 +45,7 @@ $config = [
     /*
      * Which users should be blacklisted
      */
-    'userIdBlacklist' => array(),
-
-    /*
-     * Fill the table name for statistics
-     */
-    'statisticsTableName' => 'statistics',
-
-    /*
-     * Fill the table name for detailed statistics
-     * @default
-     */
-    'detailedStatisticsTableName' => 'statistics_detail',
-
-    /*
-     * Fill the table name for ip statistics
-     * @default
-     */
-    'ipStatisticsTableName' => 'statistics_ip',
-
-    /*
-     * Fill the table name for identityProvidersMap
-     */
-    'identityProvidersMapTableName' => 'identityProvidersMap',
-
-    /*
-     * Fill the table name for serviceProviders
-     */
-    'serviceProvidersMapTableName' => 'serviceProvidersMap',
+    'userIdExcludelist' => array(),
 
     /*
      * Fill the entityID of OpenID Connect Provider
