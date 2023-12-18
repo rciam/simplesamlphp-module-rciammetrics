@@ -17,7 +17,7 @@ class Metrics extends ProcessingFilter
     public function __construct(array $config, $reserved)
     {
         parent::__construct($config, $reserved);
-        $this->config = Configuration::getConfig();
+        $this->config = Configuration::getConfig('module_rciammetrics.php');
     }
 
     public function process(array &$request): void
