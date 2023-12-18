@@ -6,7 +6,6 @@ use SimpleSAML\Error\Exception;
 use SimpleSAML\Logger;
 use SimpleSAML\Metadata\MetaDataStorageHandler;
 use SimpleSAML\Module\proxystatistics\Utils;
-use PDO;
 
 class AmsCommand
 {
