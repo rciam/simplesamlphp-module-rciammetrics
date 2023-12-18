@@ -11,10 +11,11 @@ use SimpleSAML\Logger;
 
 class Metrics extends ProcessingFilter
 {
-    private array $config;
+    /** @var \SimpleSAML\Configuration */
+    protected Configuration $config;
     private string $userIdAttribute;
 
-    public function __construct(array $config, $reserved)
+    public function __construct(Configuration $config, $reserved)
     {
         parent::__construct($config, $reserved);
         $this->config = Configuration::getConfig('module_rciammetrics.php');
