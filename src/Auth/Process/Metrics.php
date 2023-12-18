@@ -12,7 +12,7 @@ use SimpleSAML\Logger;
 class Metrics extends ProcessingFilter
 {
     /** @var \SimpleSAML\Configuration */
-    private array $config;
+    private Configuration $config;
     private string $userIdAttribute;
 
     public function __construct(array $config, $reserved)
