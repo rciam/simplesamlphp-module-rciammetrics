@@ -17,8 +17,10 @@ class AmsConnector
   private $conn = null;
   private $oidcIss;
   private $keycloakSp;
+  // todo: make configuration
+  private $tenenvId = 7;
 
-  const CONFIG_FILE_NAME = 'module_statisticsproxy.php';
+  const CONFIG_FILE_NAME = 'module_rciammetrics.php';
 
   /** @deprecated */
   const ENCRYPTION = 'encryption';
@@ -42,9 +44,10 @@ class AmsConnector
   const  AMS_INJEST_ENDPOINT = '/ams/ingest';
 
   const AMS_BASE_URL="https://msg-devel.argo.grnet.gr/v1";
-  const AMS_USER_TOKEN="24e2b1fa7e367a6722e16b94765264082fca56022ac68dcc8728c26376d65dd6";
-  const AMS_ADMIN_TOKEN="25bbd90ba4bb38df217bf02c5369dff30bb524a0ad0c4a5666bba602ee01d794";
+  const AMS_USER_TOKEN="af03e134515fd414a8af9a923e2a9862cb770990dce8a8aa5da05f2124e01797";
+  // todo: move to config
   private $topic_name = "metrics";
+  // todo: move to config
   private $project_name = "AAIMETRICS";
 
   public function __construct()
@@ -108,15 +111,27 @@ class AmsConnector
   public function sendToAms($data) {
     $url = self::AMS_BASE_URL . "/projects/{$this->poject_name}/topics/{$this->topic_name}:publish";
 
+    $data_tmpl = [
+      "voPersonId" => "<USER_ID>",
+      "entityId" => "<IDP_ENTITY_ID>",
+      "idpName" => "1 'authnAuthority' value,  2.<IDP_DISPLAY_NAME>, else <IDP_ALIA> 3. 'Keycloak' for Keycloak users",
+      "identifier" => "<CLIENT_ID>",
+      "spName" => "<SP_DISPLAY_NAME>", // OPTIONAL SHOULD BE OMITTED WHEN NOT AVAILABLE
+      "ipAddress" => "<IP_ADDRESS>",
+      "date" => "<TIMESTAMP>",
+      "failedLogin" => "true or false",
+      "type" => "login", // Other types like 'registration' and ''membership' exists
+      "source" => "Keycloak",
+      "tenenvId" => "<TENANT_ID>"
+    ];
+
+
     $cURLConnection = curl_init();
 
     curl_setopt($cURLConnection, CURLOPT_URL, $url);
     curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($cURLConnection, CURLOPT_HTTPHEADER, array(
-      "Content-Type: application/json",
-      "x-api-key: " . self::AMS_ADMIN_TOKEN,
-    ));
-    curl_setopt($cURLConnection, CURLOPT_HTTPHEADER, array(
+      "Accept: application/json",
       "Content-Type: application/json",
       "x-api-key: " . self::AMS_USER_TOKEN,
     ));

@@ -16,9 +16,9 @@ class AmsCommand
     {
         $this->amsConnector = new AmsConnector();
     }
-    private function writeLoginIp($sourceIdp, $service, $user, $ip, $date): void
+    private function getLoginIp($sourceIdp, $service, $user, $ip, $date): array
     {
-        $data = [
+        $dataLoginIp = [
             'ip' => $ip,
             'user' => $user,
             'sourceIdp' => $sourceIdp,
@@ -27,11 +27,11 @@ class AmsCommand
             'ipVersion' => (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? 'ipv4' : 'ipv6')
         ];
 
-        $this->amsConnector->sendToAms($data);
+        return $dataLoginIp;
     }
-    private function writeLogin($year, $month, $day, $sourceIdp, $service, $user = null)
+    private function getLogin($year, $month, $day, $sourceIdp, $service, $user = null): array
     {
-        $data = [
+      $loginData = [
             'year' => $year,
             'month' => $month,
             'day' => $day,
@@ -41,12 +41,11 @@ class AmsCommand
         ];
 
         if ($user && $this->amsConnector->getDetailedDays() > 0) {
-          $data['user'] = $user;
+          $loginData['user'] = $user;
         }
 
-      $this->amsConnector->sendToAms($data);
+      return $loginData;
     }
-
     public function insertLogin(&$request, &$date, &$userId)
     {
         if (!in_array($this->amsConnector->getMode(), ['PROXY', 'IDP', 'SP'])) {
@@ -107,6 +106,7 @@ class AmsCommand
         $day = $date->format('d');
         $dateTimestamp = $date->format('Y-m-d H:i:s T');
         $ip = Utils::getClientIpAddress();
+        $data = [];
 
         if (empty($idpEntityID) || empty($spEntityId)) {
             Logger::error(
@@ -114,27 +114,25 @@ class AmsCommand
                     " is empty and login log wasn't inserted into the database."
             );
         } else {
-            if ($this->writeLogin($year, $month, $day, $idpEntityID, $spEntityId, $userId) === false) {
-                Logger::error("The login log wasn't inserted into table: " . $this->statisticsTableName . ".");
-            }
-            if ($this->writeLoginIp($idpEntityID, $spEntityId, $userId, $ip, $dateTimestamp) === false) {
-                Logger::error("The login log for ip wasn't inserted into table: " . $this->ipStatisticsTableName . ".");
-            }
+            $data['login'] = $this->getLogin($year, $month, $day, $idpEntityID, $spEntityId, $userId);
+            $data['login_ip'] = $this->getLoginIp($idpEntityID, $spEntityId, $userId, $ip, $dateTimestamp);
             if (!empty($idpName)) {
-                $data = ['entityId' => $idpEntityID, 'idpName' => $idpName, 'idpName2' => $idpName];
-
-                $this->amsConnector->sendToAms($data);
+                $data['idp'] = ['entityId' => $idpEntityID, 'idpName' => $idpName, 'idpName2' => $idpName];
             }
 
             if (!empty($spName)) {
-              $data = [
+              $data['sp'] = [
                 'identifier' => $spEntityId,
                 'spName' => $spName,
                 'spName2' => $spName
               ];
-              $this->amsConnector->sendToAms($data);
-
             }
+        }
+
+        if(!empty($data)) {
+          $this->amsConnector->sendToAms($data);
+        } else {
+          Logger::error("No data were extracted for sending");
         }
     }
 
