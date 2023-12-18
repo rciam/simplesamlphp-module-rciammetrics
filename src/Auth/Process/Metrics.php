@@ -18,21 +18,22 @@ class Metrics extends ProcessingFilter
     public function __construct(array $config, $reserved)
     {
         parent::__construct($config, $reserved);
-        $this->config = $config;
+        $this->config = Configuration::getConfig(AmsConnector::CONFIG_FILE_NAME);
+        Logger::error("[rciammetrics:construct] config: " . var_export($this->config, true));
     }
 
     public function process(array &$request): void
     {
         if (empty($this->config->getString('userIdAttribute', null))) {
             if (empty($request['rciamAttributes']['cuid'])) {
-                Logger::error("[proxystatistics:proccess] userIdAttribute has not been configured but ['rciamAttributes']['cuid'] is not available: This login cannot be recorded");
+                Logger::error("[rciammetrics:proccess] userIdAttribute has not been configured but ['rciamAttributes']['cuid'] is not available: This login cannot be recorded");
                 return;
             } else {
                 $this->userIdAttribute = $request['rciamAttributes']['cuid'];
             }
         } else {
             if (empty($request['Attributes'][$this->config->getString('userIdAttribute', null)])) {
-                Logger::error("[proxystatistics:proccess] userIdAttribute has been configured but ['Attributes']['" . $this->config->getString('userIdAttribute') . "'] is not available: This login cannot be recorded");
+                Logger::error("[rciammetrics:proccess] userIdAttribute has been configured but ['Attributes']['" . $this->config->getString('userIdAttribute') . "'] is not available: This login cannot be recorded");
                 return;
             } else {
                 $this->userIdAttribute = $request['Attributes'][$this->config->getString('userIdAttribute', null)];
@@ -44,7 +45,7 @@ class Metrics extends ProcessingFilter
             && !empty($this->config->getArray('userIdExcludelist'))
             && !empty(array_intersect($this->userIdAttribute, $this->config->getArray('userIdExcludelist')))
         ) {
-            Logger::notice("[proxystatistics:proccess] Skipping blacklisted user with id " . var_export($this->userIdAttribute, true));
+            Logger::notice("[rciammetrics:proccess] Skipping blacklisted user with id " . var_export($this->userIdAttribute, true));
             return;
         }
 

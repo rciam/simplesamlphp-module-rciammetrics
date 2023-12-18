@@ -125,6 +125,8 @@ class AmsConnector
       "tenenvId" => "<TENANT_ID>"
     ];
 
+    Logger::debug('data: ' . var_export($data, true));
+
 
     $cURLConnection = curl_init();
 
