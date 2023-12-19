@@ -114,6 +114,7 @@ class AmsConnector
       "ipAddress" => $data['login_ip']['ip'],
       "date" => time(),
       "failedLogin" => "false",
+      "eventIdentifier" => md5(time() . ( $data['login']['user'] ?? $data['login_ip']['ip'] ) ),
       "type" => "login", // Other types like 'registration' and ''membership' exists, todo: make configuration
       "source" => "simplesamlphp", // todo: make configuration
       "tenenvId" => "7" // todo: get from the configuration
