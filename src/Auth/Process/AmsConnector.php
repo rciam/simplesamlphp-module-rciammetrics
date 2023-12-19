@@ -52,14 +52,14 @@ class AmsConnector
   public function __construct()
   {
     $conf = Configuration::getConfig(self::CONFIG_FILE_NAME);
-    $this->mode = $conf->getString(self::MODE, 'PROXY');
-    $this->idpEntityId = $conf->getString(self::IDP_ENTITY_ID, '');
-    $this->idpName = $conf->getString(self::IDP_NAME, '');
-    $this->spEntityId = $conf->getString(self::SP_ENTITY_ID, '');
-    $this->spName = $conf->getString(self::SP_NAME, '');
-    $this->userIdAttribute = $conf->getString(self::USER_ID_ATTRIBUTE, null);
-    $this->oidcIss = $conf->getString(self::OIDC_ISS, null);
-    $this->keycloakSp = $conf->getString(self::KEYCLOAK_SP, null);
+    $this->mode = $conf->getOptionalValue(self::MODE, 'PROXY');
+    $this->idpEntityId = $conf->getOptionalValue(self::IDP_ENTITY_ID, '');
+    $this->idpName = $conf->getOptionalValue(self::IDP_NAME, '');
+    $this->spEntityId = $conf->getOptionalValue(self::SP_ENTITY_ID, '');
+    $this->spName = $conf->getOptionalValue(self::SP_NAME, '');
+    $this->userIdAttribute = $conf->getOptionalValue(self::USER_ID_ATTRIBUTE, null);
+    $this->oidcIss = $conf->getOptionalValue(self::OIDC_ISS, null);
+    $this->keycloakSp = $conf->getOptionalValue(self::KEYCLOAK_SP, null);
   }
 
   public function getMode()

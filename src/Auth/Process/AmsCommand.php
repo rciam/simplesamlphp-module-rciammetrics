@@ -92,6 +92,8 @@ class AmsCommand
             }
         }
 
+        Logger::debug(__METHOD__ . "::mode: " . var_export($this->amsConnector->getMode(), true));
+
         if ($this->amsConnector->getMode() === 'IDP') {
             $idpName = $this->amsConnector->getIdpName();
             $idpEntityID = $this->amsConnector->getIdpEntityId();
@@ -133,6 +135,31 @@ class AmsCommand
         } else {
           Logger::error("No data were extracted for sending");
         }
+    }
+
+    public static function getSPDisplayName($spMetadata): ?string
+    {
+      if (!empty($spMetadata['name'])) {
+        // TODO: Use \SimpleSAML\Locale\Translate::getPreferredTranslation()
+        // in SSP 2.0
+        if (!empty($spMetadata['name']['en'])) {
+          return $spMetadata['name']['en'];
+        } else {
+          return $spMetadata['name'];
+        }
+      }
+
+      if (!empty($spMetadata['OrganizationDisplayName'])) {
+        // TODO: Use \SimpleSAML\Locale\Translate::getPreferredTranslation()
+        // in SSP 2.0
+        if (!empty($spMetadata['OrganizationDisplayName']['en'])) {
+          return $spMetadata['OrganizationDisplayName']['en'];
+        } else {
+          return $spMetadata['OrganizationDisplayName'];
+        }
+      }
+
+      return null;
     }
 
 }
