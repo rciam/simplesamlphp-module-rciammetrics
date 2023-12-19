@@ -5,7 +5,7 @@ namespace SimpleSAML\Module\rciammetrics\Auth\Process;
 use SimpleSAML\Error\Exception;
 use SimpleSAML\Logger;
 use SimpleSAML\Metadata\MetaDataStorageHandler;
-use SimpleSAML\Module\proxystatistics\Utils;
+use SimpleSAML\Module\rciammetrics\Utils;
 
 class AmsCommand
 {
