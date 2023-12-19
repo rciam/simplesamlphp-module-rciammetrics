@@ -13,9 +13,9 @@ class AmsConnector
   private string $idpName;
   private string $spEntityId;
   private string $spName;
-  private string $userIdAttribute;
-  private string $oidcIss;
-  private string $keycloakSp;
+  private ?string $userIdAttribute;
+  private ?string $oidcIss;
+  private ?string $keycloakSp;
   private string $topicName;
   private string $projectName;
   private string $amsToken;
