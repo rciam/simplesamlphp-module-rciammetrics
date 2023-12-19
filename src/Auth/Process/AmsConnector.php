@@ -24,7 +24,6 @@ class AmsConnector
 
   /** @deprecated */
   const ENCRYPTION = 'encryption';
-  const STORE = 'store';
   /** @deprecated */
   const SSL_CA = 'ssl_ca';
   /** @deprecated */
@@ -53,11 +52,6 @@ class AmsConnector
   public function __construct()
   {
     $conf = Configuration::getConfig(self::CONFIG_FILE_NAME);
-    $this->storeConfig = $conf->getArray(self::STORE, null);
-
-    $this->storeConfig = Configuration::loadFromArray($this->storeConfig);
-    $this->databaseDsn = $this->storeConfig->getString('database.dsn');
-
     $this->mode = $conf->getString(self::MODE, 'PROXY');
     $this->idpEntityId = $conf->getString(self::IDP_ENTITY_ID, '');
     $this->idpName = $conf->getString(self::IDP_NAME, '');

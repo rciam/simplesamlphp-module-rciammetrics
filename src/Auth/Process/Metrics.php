@@ -13,7 +13,7 @@ class Metrics extends ProcessingFilter
 {
     /** @var \SimpleSAML\Configuration */
     private Configuration $config;
-    private string $userIdAttribute;
+    private array $userIdAttribute;
 
     public function __construct(array $config, $reserved)
     {
