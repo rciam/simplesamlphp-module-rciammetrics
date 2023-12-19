@@ -105,19 +105,22 @@ class AmsConnector
   public function sendToAms($data) {
     $url = self::AMS_BASE_URL . "/projects/{$this->poject_name}/topics/{$this->topic_name}:publish";
 
-    $data_tmpl = [
-      "voPersonId" => "<USER_ID>",
-      "entityId" => "<IDP_ENTITY_ID>",
-      "idpName" => "1 'authnAuthority' value,  2.<IDP_DISPLAY_NAME>, else <IDP_ALIA> 3. 'Keycloak' for Keycloak users",
-      "identifier" => "<CLIENT_ID>",
-      "spName" => "<SP_DISPLAY_NAME>", // OPTIONAL SHOULD BE OMITTED WHEN NOT AVAILABLE
-      "ipAddress" => "<IP_ADDRESS>",
-      "date" => "<TIMESTAMP>",
-      "failedLogin" => "true or false",
-      "type" => "login", // Other types like 'registration' and ''membership' exists
-      "source" => "Keycloak",
-      "tenenvId" => "<TENANT_ID>"
+    $formattedData = [
+      "voPersonId" => $data['login']['user'],
+      "entityId" => $data['idp']['entityId'],
+      "idpName" => $data['idp']['idpName'] ?? $data['idp']['idpName2'],
+      "identifier" => $data['idp']['identifier'],
+      "ipAddress" => $data['login_ip']['ip'],
+      "date" => time(),
+      "failedLogin" => "false",
+      "type" => "login", // Other types like 'registration' and ''membership' exists, todo: make configuration
+      "source" => "simplesamlphp", // todo: make configuration
+      "tenenvId" => "7" // todo: get from the configuration
     ];
+
+    if(!empty($data['idp']['spName']) || !empty($data['idp']['spName2'])) {
+      $formattedData["spName"] = $data['idp']['spName'] ?? $data['idp']['spName2'];
+    }
 
     Logger::debug('data: ' . var_export($data, true));
 
@@ -131,13 +134,13 @@ class AmsConnector
       "Content-Type: application/json",
       "x-api-key: " . self::AMS_USER_TOKEN,
     ));
-    curl_setopt($cURLConnection, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($cURLConnection, CURLOPT_POSTFIELDS, json_encode($formattedData));
 
     $amd_response = curl_exec($cURLConnection);
     curl_close($cURLConnection);
 
     $jsonArrayResponse = json_decode($amd_response);
-
+    Logger::debug(__METHOD__ . '::ams response: ' . var_export($jsonArrayResponse, true));
   }
 
 }
