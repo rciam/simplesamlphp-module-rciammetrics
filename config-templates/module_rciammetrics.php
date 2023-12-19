@@ -57,5 +57,39 @@ $config = [
      */
     'keycloakSp' => 'http://example.org/keykloak/sp',
 
+     /*
+      *  Source that provides data
+      * */
+    'amsDataSource' => 'simplesamlphp',
 
+      /*
+     * Fill the RCIAM Metrics Tenant Environment ID
+     */
+    'amsRciamMetricsTenantId' => null,
+
+    /*
+     * AMS authentication token
+     * */
+    'amsToken' => null,
+
+     /*
+      * AMS Topic name
+      * */
+    'amsTopicName' => 'metrics',
+
+    /*
+     * AMS Project Name
+     * */
+    'amsProjectName' => 'AAIMETRICS',
+
+    /*
+     * AMS Base url
+     * */
+    'amsBaseUrl' => null,
+
+    /*
+     * AMS Data type, Types supported are `login`, `registration`, `membership`
+     * default value is `login`
+     * */
+    'amsDataType' => '',
 ];

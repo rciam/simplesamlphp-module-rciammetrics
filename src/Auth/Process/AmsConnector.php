@@ -14,40 +14,32 @@ class AmsConnector
   private $spEntityId;
   private $spName;
   private $userIdAttribute;
-  private $conn = null;
   private $oidcIss;
   private $keycloakSp;
-  // todo: make configuration
-  private $tenenvId = 7;
+  private $topicName;
+  private $projectName;
+  private $amsToken;
+  private $rciamMetricsTenantId;
+  private $dataSource;
+  private $amsBaseUrl;
+  private $amsDataType;
 
-  const CONFIG_FILE_NAME = 'module_rciammetrics.php';
-
-  /** @deprecated */
-  const ENCRYPTION = 'encryption';
-  /** @deprecated */
-  const SSL_CA = 'ssl_ca';
-  /** @deprecated */
-  const SSL_CERT = 'ssl_cert_path';
-  /** @deprecated */
-  const SSL_KEY = 'ssl_key_path';
-  /** @deprecated */
-  const SSL_CA_PATH = 'ssl_ca_path';
-  const MODE = 'mode';
-  const IDP_ENTITY_ID = 'idpEntityId';
-  const IDP_NAME = 'idpName';
-  const SP_ENTITY_ID = 'spEntityId';
-  const SP_NAME = 'spName';
-  const USER_ID_ATTRIBUTE = 'userIdAttribute';
-  const OIDC_ISS = 'oidcIssuer';
-  const KEYCLOAK_SP = 'keycloakSp';
-  const  AMS_INJEST_ENDPOINT = '/ams/ingest';
-
-  const AMS_BASE_URL="https://msg-devel.argo.grnet.gr/v1";
-  const AMS_USER_TOKEN="af03e134515fd414a8af9a923e2a9862cb770990dce8a8aa5da05f2124e01797";
-  // todo: move to config
-  private $topic_name = "metrics";
-  // todo: move to config
-  private $project_name = "AAIMETRICS";
+  public const CONFIG_FILE_NAME = 'module_rciammetrics.php';
+  public const MODE = 'mode';
+  public const IDP_ENTITY_ID = 'idpEntityId';
+  public const IDP_NAME = 'idpName';
+  public const SP_ENTITY_ID = 'spEntityId';
+  public const SP_NAME = 'spName';
+  public const USER_ID_ATTRIBUTE = 'userIdAttribute';
+  public const OIDC_ISS = 'oidcIssuer';
+  public const KEYCLOAK_SP = 'keycloakSp';
+  public const TOPIC_NAME = "amsTopicName";
+  public const PROJECT_NAME = "amsProjectName";
+  public const AMS_TOKEN = "amsToken";
+  public const RCIAM_METRICS_TENANT_ID = "amsRciamMetricsTenantId";
+  public const DATASOURCE = "amsDataSource";
+  public const AMS_BASE_URL = "amsBaseUrl";
+  public const AMS_DATA_TYPE = "amsDataType";
 
   public function __construct()
   {
@@ -60,6 +52,14 @@ class AmsConnector
     $this->userIdAttribute = $conf->getOptionalValue(self::USER_ID_ATTRIBUTE, null);
     $this->oidcIss = $conf->getOptionalValue(self::OIDC_ISS, null);
     $this->keycloakSp = $conf->getOptionalValue(self::KEYCLOAK_SP, null);
+
+    $this->topicName = $conf->getString(self::TOPIC_NAME);
+    $this->projectName = $conf->getString(self::PROJECT_NAME);
+    $this->amsToken = $conf->getString(self::AMS_TOKEN);
+    $this->rciamMetricsTenantId = $conf->getString(self::RCIAM_METRICS_TENANT_ID);
+    $this->dataSource = $conf->getString(self::DATASOURCE);
+    $this->amsBaseUrl = $conf->getString(self::AMS_BASE_URL);
+    $this->amsDataType = $conf->getOptionalString(self::AMS_DATA_TYPE, 'login');
   }
 
   public function getMode()
@@ -102,8 +102,9 @@ class AmsConnector
     return $this->keycloakSp;
   }
 
-  public function sendToAms($data) {
-    $url = self::AMS_BASE_URL . "/projects/{$this->project_name}/topics/{$this->topic_name}:publish";
+  public function sendToAms($data): void
+  {
+    $url = $this->amsBaseUrl . "/projects/{$this->projectName}/topics/{$this->topicName}:publish";
     Logger::debug(__METHOD__ . '::raw data: ' . var_export($data, true));
 
     $formattedData = [
@@ -115,9 +116,9 @@ class AmsConnector
       "date" => time(),
       "failedLogin" => "false",
       "eventIdentifier" => md5(time() . ( $data['login']['user'] ?? $data['login_ip']['ip'] ) ),
-      "type" => "login", // Other types like 'registration' and ''membership' exists, todo: make configuration
-      "source" => "simplesamlphp", // todo: make configuration
-      "tenenvId" => "7" // todo: get from the configuration
+      "type" => $this->amsDataType,
+      "source" => $this->dataSource,
+      "tenenvId" => $this->rciamMetricsTenantId
     ];
 
     if(!empty($data['sp']['spName']) || !empty($data['sp']['spName2'])) {
@@ -137,7 +138,7 @@ class AmsConnector
     curl_setopt($cURLConnection, CURLOPT_HTTPHEADER, array(
       "Accept: application/json",
       "Content-Type: application/json",
-      "x-api-key: " . self::AMS_USER_TOKEN,
+      "x-api-key: " . $this->amsToken,
     ));
     $jsonFormattedData = base64_encode(json_encode($formattedData));
     $pdata = "{\"messages\":[{\"data\":\"{$jsonFormattedData}\"}]}";
