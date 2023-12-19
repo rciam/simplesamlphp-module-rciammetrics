@@ -63,7 +63,8 @@ $config = [
     'amsDataSource' => 'simplesamlphp',
 
       /*
-     * Fill the RCIAM Metrics Tenant Environment ID
+       * Fill the RCIAM Metrics Tenant Environment ID
+       * this is a string value
      */
     'amsRciamMetricsTenantId' => null,
 

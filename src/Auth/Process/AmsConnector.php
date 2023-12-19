@@ -8,21 +8,21 @@ use SimpleSAML\Logger;
 
 class AmsConnector
 {
-  private $mode;
-  private $idpEntityId;
-  private $idpName;
-  private $spEntityId;
-  private $spName;
-  private $userIdAttribute;
-  private $oidcIss;
-  private $keycloakSp;
-  private $topicName;
-  private $projectName;
-  private $amsToken;
-  private $rciamMetricsTenantId;
-  private $dataSource;
-  private $amsBaseUrl;
-  private $amsDataType;
+  private string $mode;
+  private string $idpEntityId;
+  private string $idpName;
+  private string $spEntityId;
+  private string $spName;
+  private string $userIdAttribute;
+  private string $oidcIss;
+  private string $keycloakSp;
+  private string $topicName;
+  private string $projectName;
+  private string $amsToken;
+  private string $rciamMetricsTenantId;
+  private string $dataSource;
+  private string $amsBaseUrl;
+  private string $amsDataType;
 
   public const CONFIG_FILE_NAME = 'module_rciammetrics.php';
   public const MODE = 'mode';
