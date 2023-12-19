@@ -57,9 +57,5 @@ $config = [
      */
     'keycloakSp' => 'http://example.org/keykloak/sp',
 
-    /**
-     * Authentication source name if authentication should be required.
-     * Defaults to empty string.
-     */
-    //'requireAuth.source' => 'default-sp',
+
 ];

@@ -104,12 +104,13 @@ class AmsConnector
 
   public function sendToAms($data) {
     $url = self::AMS_BASE_URL . "/projects/{$this->project_name}/topics/{$this->topic_name}:publish";
+    Logger::debug(__METHOD__ . '::raw data: ' . var_export($data, true));
 
     $formattedData = [
       "voPersonId" => $data['login']['user'],
       "entityId" => $data['idp']['entityId'],
       "idpName" => $data['idp']['idpName'] ?? $data['idp']['idpName2'],
-      "identifier" => $data['idp']['identifier'],
+      "identifier" => $data['sp']['identifier'],
       "ipAddress" => $data['login_ip']['ip'],
       "date" => time(),
       "failedLogin" => "false",
@@ -118,8 +119,8 @@ class AmsConnector
       "tenenvId" => "7" // todo: get from the configuration
     ];
 
-    if(!empty($data['idp']['spName']) || !empty($data['idp']['spName2'])) {
-      $formattedData["spName"] = $data['idp']['spName'] ?? $data['idp']['spName2'];
+    if(!empty($data['sp']['spName']) || !empty($data['sp']['spName2'])) {
+      $formattedData["spName"] = $data['sp']['spName'] ?? $data['sp']['spName2'];
     }
 
     Logger::debug(__METHOD__ . '::formattedData: ' . var_export($formattedData, true));
@@ -137,7 +138,11 @@ class AmsConnector
       "Content-Type: application/json",
       "x-api-key: " . self::AMS_USER_TOKEN,
     ));
-    curl_setopt($cURLConnection, CURLOPT_POSTFIELDS, json_encode($formattedData));
+    $jsonFormattedData = base64_encode(json_encode($formattedData));
+    $pdata = "{\"messages\":[{\"data\":\"{$jsonFormattedData}\"}]}";
+    Logger::debug(__METHOD__ . '::message: ' . var_export($pdata, true));
+
+    curl_setopt($cURLConnection, CURLOPT_POSTFIELDS, $pdata);
 
     $amd_response = curl_exec($cURLConnection);
 
