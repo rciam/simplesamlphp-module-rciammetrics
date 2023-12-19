@@ -14,7 +14,7 @@ class Utils
     /**
      * Retrieve original IP address of client.
      */
-    public function getClientIpAddress():string
+    public static function getClientIpAddress():string
     {
 
         $ip_keys = [
