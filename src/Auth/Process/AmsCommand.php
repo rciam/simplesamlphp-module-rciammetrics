@@ -39,7 +39,7 @@ class AmsCommand
             'count' => 1,
         ];
 
-        if ($user && $this->amsConnector->getDetailedDays() > 0) {
+        if ($user) {
           $loginData['user'] = $user;
         }
 
