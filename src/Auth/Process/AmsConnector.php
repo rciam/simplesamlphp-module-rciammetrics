@@ -103,7 +103,7 @@ class AmsConnector
   }
 
   public function sendToAms($data) {
-    $url = self::AMS_BASE_URL . "/projects/{$this->poject_name}/topics/{$this->topic_name}:publish";
+    $url = self::AMS_BASE_URL . "/projects/{$this->project_name}/topics/{$this->topic_name}:publish";
 
     $formattedData = [
       "voPersonId" => $data['login']['user'],
@@ -122,13 +122,16 @@ class AmsConnector
       $formattedData["spName"] = $data['idp']['spName'] ?? $data['idp']['spName2'];
     }
 
-    Logger::debug('data: ' . var_export($data, true));
+    Logger::debug(__METHOD__ . '::formattedData: ' . var_export($formattedData, true));
+    Logger::debug(__METHOD__ . '::url: ' . var_export($url, true));
 
 
     $cURLConnection = curl_init();
 
     curl_setopt($cURLConnection, CURLOPT_URL, $url);
-    curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($cURLConnection, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($cURLConnection, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($cURLConnection, CURLOPT_HTTPHEADER, array(
       "Accept: application/json",
       "Content-Type: application/json",
@@ -137,10 +140,18 @@ class AmsConnector
     curl_setopt($cURLConnection, CURLOPT_POSTFIELDS, json_encode($formattedData));
 
     $amd_response = curl_exec($cURLConnection);
-    curl_close($cURLConnection);
 
-    $jsonArrayResponse = json_decode($amd_response);
-    Logger::debug(__METHOD__ . '::ams response: ' . var_export($jsonArrayResponse, true));
+    // Check if any error occurred
+    if (!curl_errno($cURLConnection)) {
+      $info = curl_getinfo($cURLConnection);
+      Logger::debug(__METHOD__ . '::ams post info: ' . var_export($info, true));
+      $jsonArrayResponse = json_decode($amd_response);
+      Logger::debug(__METHOD__ . '::ams response: ' . var_export($jsonArrayResponse, true));
+    } else {
+      Logger::error(__METHOD__ . '::ams post error ' . var_export(curl_error($cURLConnection), true));
+    }
+
+    curl_close($cURLConnection);
   }
 
 }
