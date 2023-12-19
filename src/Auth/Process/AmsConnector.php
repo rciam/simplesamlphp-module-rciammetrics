@@ -62,47 +62,76 @@ class AmsConnector
     $this->amsDataType = $conf->getOptionalString(self::AMS_DATA_TYPE, 'login');
   }
 
-  public function getMode()
+  /**
+   * @return string
+   */
+  public function getMode(): string
   {
     return $this->mode;
   }
 
-  public function getIdpEntityId()
+  /**
+   * @return string
+   */
+  public function getIdpEntityId(): string
   {
     return $this->idpEntityId;
   }
 
-  public function getIdpName()
+  /**
+   * @return string
+   */
+  public function getIdpName(): string
   {
     return $this->idpName;
   }
 
-  public function getSpEntityId()
+  /**
+   * @return string
+   */
+  public function getSpEntityId(): string
   {
     return $this->spEntityId;
   }
 
-  public function getSpName()
+  /**
+   * @return string
+   */
+  public function getSpName(): string
   {
     return $this->spName;
   }
 
-  public function getUserIdAttribute()
+  /**
+   * @return string|null
+   */
+  public function getUserIdAttribute(): ?string
   {
     return $this->userIdAttribute;
   }
 
-  public function getOidcIssuer()
+  /**
+   * @return string|null
+   */
+  public function getOidcIssuer(): ?string
   {
     return $this->oidcIss;
   }
 
-  public function getKeycloakSp()
+  /**
+   * @return string|null
+   */
+  public function getKeycloakSp(): ?string
   {
     return $this->keycloakSp;
   }
 
-  public function sendToAms($data): void
+  /**
+   * @param   array  $data
+   *
+   * @return void
+   */
+  public function sendToAms(array $data): void
   {
     $url = $this->amsBaseUrl . "/projects/{$this->projectName}/topics/{$this->topicName}:publish";
     Logger::debug(__METHOD__ . '::raw data: ' . var_export($data, true));
