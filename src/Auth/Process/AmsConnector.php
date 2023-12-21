@@ -142,9 +142,9 @@ class AmsConnector
       "idpName" => $data['idp']['idpName'] ?? $data['idp']['idpName2'],
       "identifier" => $data['sp']['identifier'],
       "ipAddress" => $data['login_ip']['ip'],
-      "date" => time(),
+      "date" => date("Y-m-d H:i:s"),
       "failedLogin" => "false",
-      "eventIdentifier" => md5(time() . ( $data['login']['user'] ?? $data['login_ip']['ip'] ) ),
+      "eventIdentifier" => (int)(time() . rand(0, time())),
       "type" => $this->amsDataType,
       "source" => $this->dataSource,
       "tenenvId" => $this->rciamMetricsTenantId
