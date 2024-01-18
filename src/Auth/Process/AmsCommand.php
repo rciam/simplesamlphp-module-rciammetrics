@@ -111,8 +111,8 @@ class AmsCommand
 
         if (empty($idpEntityID) || empty($spEntityId)) {
             Logger::error(
-                "'idpEntityId' or 'spEntityId'" .
-                    " is empty and login log wasn't inserted into the database."
+                "Unable to record login: The identity provider ('idpEntityId')" .
+                " or service provider ('spEntityId') information is missing"
             );
         } else {
             $data['login'] = $this->getLogin($year, $month, $day, $idpEntityID, $spEntityId, $userId);
@@ -133,7 +133,7 @@ class AmsCommand
         if(!empty($data)) {
           $this->amsConnector->sendToAms($data);
         } else {
-          Logger::error("No data were extracted for sending");
+          Logger::error("Unable to record login: No metrics data were extracted");
         }
     }
 

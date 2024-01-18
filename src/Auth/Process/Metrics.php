@@ -19,7 +19,7 @@ class Metrics extends ProcessingFilter
     {
         parent::__construct($config, $reserved);
         $this->config = Configuration::getConfig(AmsConnector::CONFIG_FILE_NAME);
-        Logger::error("[rciammetrics:construct] config: " . var_export($this->config, true));
+        Logger::debug("[rciammetrics:construct] config: " . var_export($this->config, true));
     }
 
     public function process(array &$request): void
