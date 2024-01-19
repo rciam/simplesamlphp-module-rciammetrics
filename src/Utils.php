@@ -65,7 +65,7 @@ class Utils
      *
      * @return string
      */
-    public function generateUUIDv4(): string
+    public static function generateUUIDv4(): string
     {
         // Generate 16 random bytes (128 bits)
         $data = random_bytes(16);
