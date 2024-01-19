@@ -13,6 +13,8 @@ class Utils
 
     /**
      * Retrieve original IP address of client.
+     *
+     * @return string
      */
     public static function getClientIpAddress():string
     {
@@ -57,4 +59,25 @@ class Utils
 
         return $_SERVER['REMOTE_ADDR'];
     }
+
+    /**
+     * Generate a UUIDv4
+     *
+     * @return string
+     */
+    public static function generateUUIDv4(): string
+    {
+        // Generate 16 random bytes (128 bits)
+        $data = random_bytes(16);
+
+        // Set the version (4) and variant bits
+        $data[6] = chr((ord($data[6]) & 0x0F) | 0x40); // version 4
+        $data[8] = chr((ord($data[8]) & 0x3F) | 0x80); // variant 2 (RFC 4122)
+
+        // Convert binary UUID to a human-readable string
+        $uuidString = vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+
+        return $uuidString;
+    }
+
 }

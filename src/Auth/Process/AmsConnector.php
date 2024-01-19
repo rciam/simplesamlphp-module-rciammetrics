@@ -5,6 +5,7 @@ namespace SimpleSAML\Module\rciammetrics\Auth\Process;
 use SimpleSAML\Configuration;
 use SimpleSAML\Database;
 use SimpleSAML\Logger;
+use SimpleSAML\Module\rciammetrics\Utils;
 
 class AmsConnector
 {
@@ -144,7 +145,7 @@ class AmsConnector
       "ipAddress" => $data['login_ip']['ip'],
       "date" => date("Y-m-d H:i:s"),
       "failedLogin" => "false",
-      "eventIdentifier" => (int)(time() . rand(0, time())),
+      "eventIdentifier" => Utils::generateUUIDv4(),
       "type" => $this->amsDataType,
       "source" => $this->dataSource,
       "tenenvId" => $this->rciamMetricsTenantId
